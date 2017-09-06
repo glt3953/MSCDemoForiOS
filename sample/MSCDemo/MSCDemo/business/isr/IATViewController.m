@@ -18,7 +18,7 @@
 
 #define NAME        @"userwords"
 #define USERWORDS   @"{\"userword\":[{\"name\":\"我的常用词\",\"words\":[\"佳晨实业\",\"蜀南庭苑\",\"高兰路\",\"复联二\"]},{\"name\":\"我的好友\",\"words\":[\"李馨琪\",\"鹿晓雷\",\"张集栋\",\"周家莉\",\"叶震珂\",\"熊泽萌\"]}]}"
-
+static NSUInteger maxFileTestNum = 20;
 
 
 
@@ -50,6 +50,9 @@
     //避免同时产生多个按钮事件
     [self setExclusiveTouchForButtons:self.view];
     
+    _fileTestIndex = 0;
+    _allTimeInterval = 0;
+    _fileTestResult = @"";
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -385,6 +388,9 @@
     NSBundle *bundle = [NSBundle mainBundle];
     NSString *testAudioFilePath = [[bundle bundlePath] stringByAppendingPathComponent:@"fileTest/47a5aa4f-dfb5-42a5-9b2f-1d86db0b5332.pcm"];
     NSLog(@"testAudioFilePath:%@, _pcmFilePath:%@", testAudioFilePath, _pcmFilePath);
+    
+    _firstPkgDate = [NSDate date];
+    _fileTestIndex++;
 
     while ([self.fileReadThread isCancelled] == NO) {
         //间隔一定时长获取语音，模拟人的正常语速
@@ -398,6 +404,7 @@
         self.hasReadFileSize += [data length];
         BOOL success = [_iFlySpeechRecognizer writeAudio:data];
         if (!success || [data length] == 0) {
+            _negativePkgDate = [NSDate date];
             [_iFlySpeechRecognizer stopListening];
             [self.fileReadThread cancel];
             break;
@@ -519,7 +526,7 @@
  ****/
 - (void) onResults:(NSArray *) results isLast:(BOOL)isLast
 {
-    
+
     NSMutableString *resultString = [[NSMutableString alloc] init];
     NSDictionary *dic = results[0];
     for (NSString *key in dic) {
@@ -527,10 +534,23 @@
     }
     _result =[NSString stringWithFormat:@"%@%@", _textView.text,resultString];
     NSString * resultFromJson =  [ISRDataHelper stringFromJson:resultString];
-    _textView.text = [NSString stringWithFormat:@"%@%@", _textView.text,resultFromJson];
+    _textView.text = [NSString stringWithFormat:@"%@%@", _textView.text, resultFromJson];
     
-    if (isLast){
+    if (isLast) {
         NSLog(@"听写结果(json)：%@测试",  self.result);
+        
+        NSTimeInterval allPkgTimeInterval = [[NSDate date] timeIntervalSinceDate:self.firstPkgDate];
+        _allTimeInterval += allPkgTimeInterval;
+        NSTimeInterval negativePkgTimeInterval = [[NSDate date] timeIntervalSinceDate:self.negativePkgDate];
+        static double allNegativePkgTimeInterval = 0;
+        allNegativePkgTimeInterval += negativePkgTimeInterval;
+        
+        _fileTestResult = [[NSString stringWithFormat:@"序号%ld，耗时：%.3f, 最后一包耗时：%.3f，识别结果：%@，最后一包累计耗时：%.3f，累计耗时：%.3f \n\n", (long)_fileTestIndex, allPkgTimeInterval, negativePkgTimeInterval, _textView.text, allNegativePkgTimeInterval, _allTimeInterval] stringByAppendingString:_fileTestResult];
+        _textView.text = _fileTestResult;
+        
+        if (_fileTestIndex < maxFileTestNum) {
+            [self performSelector:@selector(audioStreamBtnHandler:) withObject:nil afterDelay:0.3];  // 延迟0.3秒，以便识别工作正常结束
+        }
     }
     NSLog(@"_result=%@",_result);
     NSLog(@"resultFromJson=%@",resultFromJson);

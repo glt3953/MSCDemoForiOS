@@ -51,5 +51,10 @@
 @property (nonatomic, retain) NSFileHandle *fileHandle;
 @property (nonatomic) NSUInteger hasReadFileSize;
 @property (nonatomic) int sizeToRead;
+@property (nonatomic) NSInteger fileTestIndex; //文件测试序号
+@property (nonatomic, strong) NSDate *firstPkgDate; //发送第一包的时间戳
+@property (nonatomic, strong) NSDate *negativePkgDate; //发送负包的时间戳
+@property (nonatomic) double allTimeInterval; //批量跑完文件的累计耗时
+@property (nonatomic, copy) NSString *fileTestResult; //批量音频文件的识别结果
 
 @end
