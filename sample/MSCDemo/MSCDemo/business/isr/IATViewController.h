@@ -47,5 +47,9 @@
 @property (nonatomic,assign) BOOL isStreamRec;//是否是音频流识别
 @property (nonatomic,assign) BOOL isBeginOfSpeech;//是否返回BeginOfSpeech回调
 
+@property (nonatomic, retain) NSThread *fileReadThread;
+@property (nonatomic, retain) NSFileHandle *fileHandle;
+@property (nonatomic) NSUInteger hasReadFileSize;
+@property (nonatomic) int sizeToRead;
 
 @end

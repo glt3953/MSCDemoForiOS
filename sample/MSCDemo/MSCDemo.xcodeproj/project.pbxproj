@@ -60,6 +60,7 @@
 		E99D762B1761ABBF005A02FD /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E99D762A1761ABBF005A02FD /* AudioToolbox.framework */; };
 		E99D762C1761ABFE005A02FD /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E99D76281761AA8F005A02FD /* SystemConfiguration.framework */; };
 		EF18454E1831D10B00C8068F /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF18454D1831D10B00C8068F /* AVFoundation.framework */; };
+		F33FEF311F5FA56300512F57 /* fileTest in Resources */ = {isa = PBXBuildFile; fileRef = F33FEF301F5FA56300512F57 /* fileTest */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -153,6 +154,7 @@
 		E99D76281761AA8F005A02FD /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		E99D762A1761ABBF005A02FD /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		EF18454D1831D10B00C8068F /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		F33FEF301F5FA56300512F57 /* fileTest */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fileTest; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -395,6 +397,7 @@
 		E9706F3C175F383E003B76FC /* MSCDemo */ = {
 			isa = PBXGroup;
 			children = (
+				F33FEF2C1F5FA49000512F57 /* Resources */,
 				84A85DB01B4D0BA40056929E /* data */,
 				845FA0531AFC5529008447CE /* Definition.h */,
 				845FA0541AFC5552008447CE /* doc */,
@@ -417,6 +420,14 @@
 				E9706F42175F383E003B76FC /* main.m */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		F33FEF2C1F5FA49000512F57 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				F33FEF301F5FA56300512F57 /* fileTest */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -448,8 +459,8 @@
 				LastUpgradeCheck = 0700;
 				TargetAttributes = {
 					E9706F31175F383E003B76FC = {
-						DevelopmentTeam = 957FJVBDCZ;
-						ProvisioningStyle = Manual;
+						DevelopmentTeam = 3KQG33P93J;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -485,6 +496,7 @@
 				84A85DC01B4D0E780056929E /* bnf in Resources */,
 				E9706F41175F383E003B76FC /* InfoPlist.strings in Resources */,
 				84A85DC51B4D14660056929E /* Main.storyboard in Resources */,
+				F33FEF311F5FA56300512F57 /* fileTest in Resources */,
 				845FA05C1AFC5552008447CE /* readme.txt in Resources */,
 				529DD4421AE8D7C900A13137 /* Launch Screen.xib in Resources */,
 				AD9E659A1C9BDF21005FC1B9 /* tts in Resources */,
@@ -631,8 +643,8 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = launchImage;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Hefei Ifly Morningstar CO., LTD. (957FJVBDCZ)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Hefei Ifly Morningstar CO., LTD. (957FJVBDCZ)";
-				DEVELOPMENT_TEAM = 957FJVBDCZ;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = 3KQG33P93J;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -649,8 +661,8 @@
 				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iflytek.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = MSCDemo;
-				PROVISIONING_PROFILE = "873cb2ae-8e32-4d85-b812-ea3240c3734e";
-				PROVISIONING_PROFILE_SPECIFIER = Common_Distribution;
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -666,8 +678,8 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = launchImage;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Hefei Ifly Morningstar CO., LTD. (957FJVBDCZ)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Hefei Ifly Morningstar CO., LTD. (957FJVBDCZ)";
-				DEVELOPMENT_TEAM = 957FJVBDCZ;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = 3KQG33P93J;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -684,8 +696,8 @@
 				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.iflytek.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = MSCDemo;
-				PROVISIONING_PROFILE = "873cb2ae-8e32-4d85-b812-ea3240c3734e";
-				PROVISIONING_PROFILE_SPECIFIER = Common_Distribution;
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";

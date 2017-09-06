@@ -314,23 +314,23 @@
         [self initRecognizer];
     }
     
-//    if( [_iFlySpeechRecognizer isListening])
-//    {
-//        [_popUpView showText: @"启动识别服务失败，请稍后重试"];//可能是上次请求未结束，暂不支持多路并发
-//        return;
-//    }
+    if( [_iFlySpeechRecognizer isListening])
+    {
+        [_popUpView showText: @"启动识别服务失败，请稍后重试"];//可能是上次请求未结束，暂不支持多路并发
+        return;
+    }
     
-//    NSFileManager *fm = [NSFileManager defaultManager];
-//    
-//    if(!_pcmFilePath || [_pcmFilePath length] == 0) {
-//        return;
-//    }
-//    
-//    if (![fm fileExistsAtPath:_pcmFilePath]) {
-//        [_popUpView showText:@"文件不存在"];
-//        NSLog(@"文件不存在");
-//        return;
-//    }
+    NSFileManager *fm = [NSFileManager defaultManager];
+    
+    if(!_pcmFilePath || [_pcmFilePath length] == 0) {
+        return;
+    }
+    
+    if (![fm fileExistsAtPath:_pcmFilePath]) {
+        [_popUpView showText:@"文件不存在"];
+        NSLog(@"文件不存在");
+        return;
+    }
     
     [_startRecBtn setEnabled:NO];
     [_audioStreamBtn setEnabled:NO];
@@ -339,6 +339,8 @@
     
     [_iFlySpeechRecognizer setDelegate:self];
     [_iFlySpeechRecognizer setParameter:@"json" forKey:[IFlySpeechConstant RESULT_TYPE]];
+    //保存录音文件，保存在sdk工作路径中，如未设置工作路径，则默认保存在library/cache下
+    [_iFlySpeechRecognizer setParameter:@"asr.pcm" forKey:[IFlySpeechConstant ASR_AUDIO_PATH]];
     [_iFlySpeechRecognizer setParameter:IFLY_AUDIO_SOURCE_STREAM forKey:@"audio_source"];    //设置音频数据模式为音频流
     BOOL ret  = [_iFlySpeechRecognizer startListening];
     
@@ -346,7 +348,7 @@
     if (ret) {
         self.isCanceled = NO; //启动发送数据线程
         //初始化录音环境
-        [IFlyAudioSession initRecordingAudioSession];
+//        [IFlyAudioSession initRecordingAudioSession];
         
         _pcmRecorder.delegate = self;
         
@@ -354,7 +356,12 @@
         BOOL ret = [_pcmRecorder start];
         
         [_popUpView showText: @"正在录音"];
-//        [NSThread detachNewThreadSelector:@selector(sendAudioThread) toTarget:self withObject:nil];
+        self.sizeToRead = 4096;
+        self.hasReadFileSize = 0;
+        _fileReadThread = [[NSThread alloc] initWithTarget:self
+                                                           selector:@selector(fileReadThreadFunc)
+                                                             object:nil];
+        [_fileReadThread start];
         NSLog(@"%s[OUT],Success,Recorder ret=%d",__func__,ret);
         
 //        [NSThread sleepForTimeInterval:1];
@@ -370,6 +377,31 @@
         [_upContactBtn setEnabled:YES];
         [_popUpView showText: @"启动失败"];
         NSLog(@"%s[OUT],Failed",__func__);
+    }
+}
+
+- (void)fileReadThreadFunc {
+    //获取测试语音文件名
+    NSBundle *bundle = [NSBundle mainBundle];
+    NSString *testAudioFilePath = [[bundle bundlePath] stringByAppendingPathComponent:@"fileTest/47a5aa4f-dfb5-42a5-9b2f-1d86db0b5332.pcm"];
+    NSLog(@"testAudioFilePath:%@, _pcmFilePath:%@", testAudioFilePath, _pcmFilePath);
+
+    while ([self.fileReadThread isCancelled] == NO) {
+        //间隔一定时长获取语音，模拟人的正常语速
+        [NSThread sleepForTimeInterval:0.12];
+        
+        self.fileHandle = [NSFileHandle fileHandleForReadingAtPath:testAudioFilePath];
+        [self.fileHandle seekToFileOffset:self.hasReadFileSize];
+        NSData* data = [self.fileHandle readDataOfLength:self.sizeToRead];
+        //DIDIVRLogDebug(@"read len = %lu",(unsigned long)[data length]);
+        [self.fileHandle closeFile];
+        self.hasReadFileSize += [data length];
+        BOOL success = [_iFlySpeechRecognizer writeAudio:data];
+        if (!success || [data length] == 0) {
+            [_iFlySpeechRecognizer stopListening];
+            [self.fileReadThread cancel];
+            break;
+        }
     }
 }
 
